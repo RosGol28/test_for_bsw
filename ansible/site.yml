@@ -1,0 +1,13 @@
+- name: Configure static image server
+  hosts: testhosts
+  become: true
+
+
+  roles:
+    - packages
+    - users
+    - zsh
+    - ssh_hardening
+    - nginx
+    - static_files
+    

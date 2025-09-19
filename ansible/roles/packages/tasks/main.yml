@@ -1,0 +1,16 @@
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+
+- name: Upgrade all packages (safe)
+  ansible.builtin.apt:
+    upgrade: dist
+
+
+- name: Install extra packages
+  ansible.builtin.apt:
+    name: "{{ extra_packages }}"
+    state: present
+    install_recommends: no

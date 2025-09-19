@@ -1,0 +1,33 @@
+- name: Ensure custom groups exist
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ custom_groups | default([]) }}"
+
+
+- name: Ensure users (create/modify/delete)
+  vars:
+    user_groups: "{{ (item.groups | default([])) + ['sftp'] if false else (item.groups | default([])) }}"
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: item
+  block:
+    - name: Create or remove user {{ item.name }}
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        shell: "{{ item.shell | default('/bin/bash') }}"
+        groups: "{{ item.groups | default([]) | join(',') }}"
+        state: "{{ item.state | default('present') }}"
+        create_home: yes
+
+
+    - name: Set password for user {{ item.name }} (if provided)
+      ansible.builtin.shell: "echo '{{ item.name }}:{{ item.password }}' | chpasswd" # изпользую chpasswd из-за упрощения для теста. На реальном сервере делал бы через Vault
+      when: item.password is defined and item.password != ''
+
+
+    - name: Ensure authorized_key is present for {{ item.name }}
+      ansible.builtin.authorized_key:
+        user: "{{ item.name }}"
+        key: "{{ item.pubkey }}"
+      when: item.pubkey is defined and item.pubkey != ''

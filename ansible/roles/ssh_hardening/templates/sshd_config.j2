@@ -1,0 +1,10 @@
+# Минимальный sshd_config для ansible
+Port 22
+PermitRootLogin no
+PasswordAuthentication yes
+PermitEmptyPasswords no
+LogLevel VERBOSE
+X11Forwarding no
+ChallengeResponseAuthentication no
+UsePAM yes
+Subsystem sftp /usr/lib/openssh/sftp-server

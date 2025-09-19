@@ -1,0 +1,48 @@
+- name: Ensure target directory exists
+  ansible.builtin.file:
+    path: "{{ static.target_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+
+- name: Ensure images directory exists
+  ansible.builtin.file:
+    path: "{{ static.target_dir }}/images"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+
+- name: Install python3-pip (required for gdown)
+  ansible.builtin.apt:
+    name: python3-pip
+    state: present
+
+
+- name: Install gdown (to fetch from Google Drive)
+  ansible.builtin.pip:
+    name: gdown
+    executable: pip3
+
+
+- name: Download archive from Google Drive
+  ansible.builtin.command: >
+    gdown https://drive.google.com/uc?id={{ static.gdrive_id }} -O /tmp/static.zip
+  args:
+    creates: /tmp/static.zip
+
+
+- name: Unarchive static content
+  ansible.builtin.unarchive:
+    src: /tmp/static.zip
+    dest: "{{ static.target_dir }}"
+    remote_src: yes
+
+
+- name: Fix ownership to www-data
+  ansible.builtin.file:
+    path: "{{ static.target_dir }}"
+    

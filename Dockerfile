@@ -20,7 +20,7 @@ RUN useradd -m -s /bin/bash tester \
 && usermod -aG sudo tester
 
 
-# Ставлю пароль откртым, так как это тест. На рабочей задаче спрятал бы его за переменной
+# Ставлю пароль откртым, так как это тест. На рабочей задаче спрятал бы в Vault
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config || true
 
 

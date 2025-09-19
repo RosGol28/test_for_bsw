@@ -1,0 +1,41 @@
+users:
+- name: alice
+shell: /bin/zsh
+state: present
+pubkey: '' # публичный ключ если нужно
+password: password
+groups: ['developers']
+- name: bob
+shell: /bin/bash
+state: present
+pubkey: ''
+password: password
+groups: []
+
+
+# Создаю группу
+custom_groups:
+- developers
+
+
+# Утилиты для установки
+extra_packages:
+- htop
+- ncdu
+- git
+- nano
+
+
+# Загружаю файлы с гугл-диска
+static:
+gdrive_id: "1L9hsq9ZFB5VbXYJ3kEKH47x9nhxxZEnI"
+target_dir: /var/www/static
+
+
+# Настройки nginx 
+nginx:
+server_name: _
+listen_port: 80
+static_root: /var/www/static
+access_log: /var/log/nginx/static_access.log
+error_log: /var/log/nginx/static_error.log

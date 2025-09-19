@@ -1,0 +1,38 @@
+- name: Install zsh
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+
+
+- name: Install oh-my-zsh for users with zsh shell
+  vars:
+    users_with_zsh: "{{ users | selectattr('shell','equalto','/bin/zsh') | list }}"
+  block:
+    - name: Ensure oh-my-zsh installed for {{ item.name }}
+      ansible.builtin.git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: "/home/{{ item.name }}/.oh-my-zsh"
+        version: master
+        update: yes
+      become_user: "{{ item.name }}"
+      when: item.shell == '/bin/zsh'
+      loop: "{{ users }}"
+      loop_control:
+        loop_var: item
+
+    - name: Ensure .zshrc exists for {{ item.name }}
+      ansible.builtin.copy:
+        dest: "/home/{{ item.name }}/.zshrc"
+        content: |
+          export ZSH="/home/{{ item.name }}/.oh-my-zsh"
+          ZSH_THEME="robbyrussell"
+          plugins=(git)
+          source $ZSH/oh-my-zsh.sh
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+        mode: '0644'
+      when: item.shell == '/bin/zsh'
+      loop: "{{ users }}"
+      loop_control:
+        loop_var: item
+        

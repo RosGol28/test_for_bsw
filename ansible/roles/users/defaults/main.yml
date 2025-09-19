@@ -1,0 +1,3 @@
+# Параметры задаются в group_vars/all.yml
+users: []
+custom_groups: []

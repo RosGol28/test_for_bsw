@@ -1,0 +1,3 @@
+static:
+  gdrive_id: ''
+  target_dir: /var/www/static

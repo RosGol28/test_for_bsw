@@ -1,0 +1,28 @@
+server {
+    listen {{ nginx.listen_port }} default_server;
+    server_name {{ nginx.server_name }};
+
+
+    access_log {{ nginx.access_log }};
+    error_log {{ nginx.error_log }} warn;
+
+
+    gzip on;
+    gzip_types image/jpeg image/png image/gif image/svg+xml text/plain text/css application/javascript application/json;
+    gzip_min_length 256;
+
+
+    location /images/ {
+        alias {{ nginx.static_root }}/images/;
+        autoindex on;
+        sendfile on;
+        tcp_nopush on;
+        expires 1h;
+        add_header Cache-Control "public";
+    }
+
+
+    location = /images {
+        return 301 /images/;
+    }
+}
