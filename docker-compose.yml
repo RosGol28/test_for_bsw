@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+testhost:
+build: .
+container_name: ansible-test-host
+ports:
+- "2222:22" 
+- "8080:80"
+tty: true
