@@ -1,11 +1,11 @@
 users:
-- name: alice
+- name: bsw
 shell: /bin/zsh
 state: present
 pubkey: '' # публичный ключ если нужно
 password: password
 groups: ['developers']
-- name: bob
+- name: bsw2
 shell: /bin/bash
 state: present
 pubkey: ''
